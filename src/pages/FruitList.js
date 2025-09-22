@@ -4,13 +4,15 @@ import { Table } from "react-bootstrap";
 import { API_BASE_URL } from "../config/config";
 
 function App() {
-    const [fruitList, setFruitList] = useState([]);//넘어온 과일 목록
+    const [fruitList, setFruitList] = useState([]); // 넘어온 과일 목록
+
     useEffect(() => {
         const url = `${API_BASE_URL}/fruit/list`;
 
         axios
             .get(url, {})
             .then((response) => {
+                //console.log(response.data);
                 setFruitList(response.data);
             });
 
@@ -37,7 +39,7 @@ function App() {
                 </tbody>
             </Table >
         </>
-    )
+    );
 }
 
 export default App;

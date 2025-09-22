@@ -10,7 +10,7 @@ function App() {
 
     useEffect(() => { // BackEnd 서버에서 데이터 읽어 오기
         const url = `${API_BASE_URL}/fruit`; // 요청할 url 주소
-        console.log(url);
+
         axios
             .get(url, {})
             .then((response) => { // 응답이 성공했을 때 

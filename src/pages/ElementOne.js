@@ -6,16 +6,16 @@ import { Table } from "react-bootstrap";
 
 // axios 라이브러리를 이용하여 리액트에서 스프링으로 데이터를 요청해야 합니다.
 function App() {
-    const [element, setElement] = useState({}); // 넘겨 받은 과일 1개
+    const [element, setElement] = useState({});
 
     useEffect(() => { // BackEnd 서버에서 데이터 읽어 오기
         const url = `${API_BASE_URL}/element`; // 요청할 url 주소
-        console.log(url);
+
         axios
             .get(url, {})
             .then((response) => { // 응답이 성공했을 때 
-                console.log('응답 받은 데이터');
-                console.log(response.data);
+                // console.log('응답 받은 데이터');
+                // console.log(response.data);
 
                 setElement(response.data);
             });
@@ -35,22 +35,22 @@ function App() {
                     </tr>
                     <tr>
                         <td>단가</td>
-                        <td>{Number(element.price).toLocaleString()} 원</td>
+                        <td>{Number(element.price).toLocaleString()}원</td>
                     </tr>
                     <tr>
                         <td>카테고리</td>
                         <td>{element.category}</td>
                     </tr>
                     <tr>
-                        <td>수량</td>
-                        <td>{Number(element.stock).toLocaleString()} 개</td>
+                        <td>재고</td>
+                        <td>{Number(element.stock).toLocaleString()}원</td>
                     </tr>
                     <tr>
                         <td>이미지</td>
-                        <td><img src={element.image} alt={element.name} style={{ width: '100px', height: 'auto' }} /></td>
+                        <td>{element.image}</td>
                     </tr>
                     <tr>
-                        <td>설명</td>
+                        <td>상세 설명</td>
                         <td>{element.description}</td>
                     </tr>
                 </tbody>

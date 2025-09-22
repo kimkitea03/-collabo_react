@@ -4,13 +4,15 @@ import { Table } from "react-bootstrap";
 import { API_BASE_URL } from "../config/config";
 
 function App() {
-    const [elementList, setElementList] = useState([]);//넘어온 과일 목록
+    const [elementList, setElementList] = useState([]);
+
     useEffect(() => {
         const url = `${API_BASE_URL}/element/list`;
 
         axios
             .get(url, {})
             .then((response) => {
+                //console.log(response.data);
                 setElementList(response.data);
             });
 
@@ -25,9 +27,7 @@ function App() {
                         <th>상품명</th>
                         <th>단가</th>
                         <th>카테고리</th>
-                        <th>수량</th>
-                        <th>이미지</th>
-                        <th>상세설명</th>
+                        <th>세부 설명</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -37,15 +37,13 @@ function App() {
                             <td>{element.name}</td>
                             <td>{Number(element.price).toLocaleString()} 원</td>
                             <td>{element.category}</td>
-                            <td>{Number(element.stock).toLocaleString()} 개</td>
-                            <td><img src={element.image} alt={element.name} style={{ width: '100px', height: 'auto' }} /></td>
                             <td>{element.description}</td>
                         </tr>
                     )}
                 </tbody>
             </Table >
         </>
-    )
+    );
 }
 
 export default App;

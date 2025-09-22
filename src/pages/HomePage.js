@@ -6,15 +6,15 @@ function App() {
         <Container className="mt-4">
             <Carousel>
                 <Carousel.Item>
-                        <img
-                            className="d-block w-100"
-                            src={`${API_BASE_URL}/images/croissant_03_bigsize.png`}
-                            alt="크로아상"
-                        />
-                        <Carousel.Caption>
-                            <h3>크로아상</h3>
-                            <p>바삭하고 결이 살아있는 프랑스식 버터 페이스트리</p>
-                        </Carousel.Caption>
+                    <img
+                        className="d-block w-100"
+                        src={`${API_BASE_URL}/images/croissant_03_bigsize.png`}
+                        alt="크로아상"
+                    />
+                    <Carousel.Caption>
+                        <h3>크로아상</h3>
+                        <p>바삭하고 결이 살아있는 프랑스식 버터 페이스트리</p>
+                    </Carousel.Caption>
                 </Carousel.Item>
                 <Carousel.Item>
                     <img
@@ -62,7 +62,7 @@ function App() {
                 </Carousel.Item>
             </Carousel>
         </Container>
-    )
+    );
 }
 
 export default App;

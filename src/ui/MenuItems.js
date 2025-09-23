@@ -3,8 +3,7 @@ import { Container, Nav, Navbar, NavDropdown } from "react-bootstrap";
 // useNavigate 훅은 특정한 페이지로 이동하고자 할 때 사용되는 훅입니다.
 import { useNavigate } from "react-router-dom";
 
-function App({ appName, user }) {
-
+function App({ appName, user, handleLogout }) {
 
     const navigate = useNavigate();
 
@@ -18,7 +17,7 @@ function App({ appName, user }) {
                 return (
                     <>
                         <Nav.Link onClick={() => navigate(``)}>상품 등록</Nav.Link>
-                        <Nav.Link onClick={() => navigate(`/member/logout`)}>로그아웃</Nav.Link>
+                        <Nav.Link onClick={handleLogout}>로그아웃</Nav.Link>
                     </>
                 )
             case 'USER':
@@ -26,7 +25,7 @@ function App({ appName, user }) {
                     <>
                         <Nav.Link onClick={() => navigate(``)}>장바구니</Nav.Link>
                         <Nav.Link onClick={() => navigate(``)}>주문내역</Nav.Link>
-                        <Nav.Link onClick={() => navigate(`/member/logout`)}>로그아웃</Nav.Link>
+                        <Nav.Link onClick={handleLogout}>로그아웃</Nav.Link>
                     </>
                 )
             default:
@@ -46,7 +45,7 @@ function App({ appName, user }) {
                 <Navbar.Brand href='/'>{appName}</Navbar.Brand>
                 <Nav className="me-auto">
                     {/* 하이퍼링크 : Nav.Link는 다른 페이지로 이동할 때 사용됩니다.  */}
-                    <Nav.Link>상품 보기</Nav.Link>
+                    <Nav.Link onClick={() => navigate(`/product/list`)} >상품 보기</Nav.Link>
 
                     {/* user에 따른 분기된 메뉴를  */}
                     {renderMenu()}

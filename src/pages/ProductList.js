@@ -51,8 +51,7 @@ function App({ user }) {
                     size="sm"
                     onClick={(event) => {
                         event.stopPropagation();
-
-                        alert('수정');
+                        Navigate(`/product/update/${item.id}`);
                     }}
                 >
                     수정

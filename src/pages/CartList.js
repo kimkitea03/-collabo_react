@@ -182,7 +182,7 @@ function App({ user }) {
                 status: 'PENDING',
                 orderItems: selectedProducts.map((product) => ({
                     cartProductId: product.cartProductId,
-                    ProductId: product.ProductId,
+                    productId: product.productId,
                     quantity: product.quantity
                 }))
             };
@@ -205,9 +205,7 @@ function App({ user }) {
         } catch (error) {
             alert(`주문 기능 실패`)
             alert(error);
-        };
-
-        alert(`주문 성공`);
+        }
     };
 
     return (

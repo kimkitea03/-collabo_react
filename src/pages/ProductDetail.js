@@ -82,7 +82,7 @@ function App({ user }) {
             //BackEnd 영역에서 CartProductDto 라는 클래스와 매치 됩니다.
             const parameters = {
                 memberId: user.id,
-                productID: product.id,
+                productId: product.id,
                 quantity: quantity
             };
             const response = await axios.post(url, parameters)

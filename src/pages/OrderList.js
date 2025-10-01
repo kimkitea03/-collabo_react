@@ -4,46 +4,49 @@ import { Alert, Button, Card, Col, Container, Row, Spinner } from "react-bootstr
 import { API_BASE_URL } from "../config/config";
 import { useNavigate } from "react-router-dom";
 
-
 function App({ user }) {
-    //loding이 ture이면 현재 데이터를 읽고 있는 중입니다.
-    const [loding, setLoding] = useState(true);
+    // loading이 true이면 현재 데이터를 읽고 있는 중입니다.
+    const [loading, setLoading] = useState(true);
 
-    //오류 정보를 저장할 스테이트
+    // 오류 정보를 저장할 스테이트
     const [error, setError] = useState('');
 
-    //주문 목록들을 저장할 스테이트
+    // 주문 목록들을 저장할 스테이트(초기 값 : 빈 배열)
     const [orders, setOrders] = useState([]);
 
-    const navigate = useNavigate();
-
-    //다음의 hook은 사용자 정보 user가 변경될 때 마다 rendring 됩니다.
+    // 다음의 hook은 사용자 정보 user가 변경될 때 마다 rendering 됩니다.
     useEffect(() => {
         if (!user) {
             setError('로그인이 필요합니다.');
-            setLoding(false);
+            setLoading(false);
         }
-    }, [user]);
 
-    // 스프링 부트의 OrderController의 getOrderList() 메소드 참조
-    const fetchOrders = async () => {
-        try {
-            const url = `${API_BASE_URL}/order/list`;
+        // 스프링 부트의 OrderController의 getOrderList() 메소드 참조
+        const fetchOrders = async () => {
+            try {
+                const url = `${API_BASE_URL}/order/list`;
 
-            // get 방식은 파라미터를 넘길 때, params라는 키를 사용하여 넘겨야 합니다.
-            // 여기서 role은 관리자 유무를 판단하기 위하여 넘겨줍니다.
-            const parameters = { params: { memberId: user.id, role: user.role } };
-            const response = await axios.get(url, parameters);
-            setOrders(response.data);
-        } catch (error) {
-            setError('주문 목록을 불러오는데 실패하였습니다.');
-            console.log(error);
-        } finally {
-            setLoding(false);
+                // get 방식은 파라미터를 넘길 때, params라는 키를 사용하여 넘겨야 합니다.
+                // 여기서 role는 관리자 유무를 판단하기 위하여 넘겨 줍니다.
+                const parameters = { params: { memberId: user.id, role: user.role } };
+                const response = await axios.get(url, parameters);
+                setOrders(response.data);
+
+            } catch (error) {
+                setError('주문 목록을 불러 오는 데 실패하였습니다.');
+                console.log(error);
+
+            } finally {
+                setLoading(false);
+            };
         };
 
-    };
-    fetchOrders();
+        fetchOrders(); // 함수 호출
+
+    }, [user]);
+
+    const navigate = useNavigate();
+
 
     const deleteOrder = (deletedId) => {
         alert(`삭제할 주문 번호 : ${deletedId}`)
@@ -59,7 +62,11 @@ function App({ user }) {
                     variant="warning"
                     size="sm"
                     className="me-2"
-                    onClick={() => navigate(`${API_BASE_URL}/order/update/${bean.orderId}`)}
+                    onClick={() => {
+                        // navigate()에 URL을 넣으면 기본적으로 현재 SPA(root) 경로를 기준으로 상대 경로를 계산해줍니다.
+                        // 따라서, 자바 스크립트의 location 객체의 href 속성을 이용하면 해결 가능합니다.
+                        window.location.href = `${API_BASE_URL}/order/update/${bean.orderId}`;
+                    }}
                 >
                     수정
                 </Button>
@@ -74,9 +81,10 @@ function App({ user }) {
             </div>
         );
 
+
     }
 
-    if (loding) {
+    if (loading) {
         return (
             <div className="d-flex justify-content-center align-items-center p-5">
                 <Spinner animation="border" role="status">

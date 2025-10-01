@@ -12,6 +12,7 @@ import ProductInsertForm from '../pages/ProductInsertForm';
 import ProductUpdateForm from '../pages/ProductUpdateForm';
 import ProductDetail from '../pages/ProductDetail';
 import CartList from '../pages/CartList';
+
 import OrderList from '../pages/OrderList';
 
 
@@ -39,12 +40,12 @@ function App({ user, handleLoginSuccess }) {
 
             <Route path='/cart/list' element={<CartList user={user} />} />
 
-            <Route path='/order/list' element={<OrderList user={user} />} />
-
             <Route path='/fruit' element={<FruitOne />} />
             <Route path='/fruit/list' element={<FruitList />} />
             <Route path='/element' element={<ElementOne />} />
             <Route path='/element/list' element={<ElementList />} />
+
+            <Route path='/order/list' element={<OrderList user={user} />} />
         </Routes>
     );
 }

@@ -19,6 +19,8 @@ function App({ user }) {
         if (!user) {
             setError('로그인이 필요합니다.');
             setLoading(false);
+            console.log('user:', user);
+            return;
         }
 
         // 스프링 부트의 OrderController의 getOrderList() 메소드 참조
@@ -48,35 +50,72 @@ function App({ user }) {
     const navigate = useNavigate();
 
 
-    const deleteOrder = (deletedId) => {
-        alert(`삭제할 주문 번호 : ${deletedId}`)
-    };
-
     //관리자를 위한 컴포넌트 함수
     const makeAdminButton = (bean) => {
         if (user?.role !== "ADMIN") return null;
 
+        // `완료` 버튼을 클릭하면 `PENDING`모드가 `COMPLETED`모드로 변경합니다.
+        const changeStatus = async (newStatus) => {
+            console.log('changeStatus called with:', newStatus, 'orderId:', bean.orderId);
+            try {
+                const url = `${API_BASE_URL}/order/update/status/${bean.orderId}?status=${newStatus}`;
+                await axios.put(url);
+
+                alert(`송장 번호 ${bean.orderId}의 주문 상태가 ${newStatus}으로 변경이 되었습니다.`);
+
+                // `COMPLETED1 모드로 변경되고 나면, 화면에 보이지 않습니다.
+                // bean.ordderId와 동일하지 않은 항목들만 다시 reandering 합니다.
+                setOrders((previous) =>
+                    previous.filter((order) => order.orderId !== bean.orderId)
+                );
+            } catch (error) {
+                console.log(error);
+                alert(`상태 변rud(주문완료)에 실패하였습니다.`)
+            }
+
+        };
+
+        // `취소` 버튼을 클릭하여 `대기 상태`인 주문 내역을 취소합니다.
+        const orderCancel = async () => {
+
+            try {
+                const url = `${API_BASE_URL}/order/delete/${bean.orderId}`;
+                await axios.delete(url);
+
+                alert(`송장 번호 ${bean.orderId}의 주문이 취소 되었습니다,.`);
+
+                // bean.ordderId와 동일하지 않은 항목들만 다시 reandering 합니다.
+                setOrders((previous) =>
+                    previous.filter((order) => order.orderId !== bean.orderId)
+                );
+            } catch (error) {
+                console.log(error);
+                alert(`주문 취소에 실패하였습니다.`)
+            }
+
+        };
+
         return (
             <div>
-                <Button
-                    variant="warning"
-                    size="sm"
-                    className="me-2"
-                    onClick={() => {
-                        // navigate()에 URL을 넣으면 기본적으로 현재 SPA(root) 경로를 기준으로 상대 경로를 계산해줍니다.
-                        // 따라서, 자바 스크립트의 location 객체의 href 속성을 이용하면 해결 가능합니다.
-                        window.location.href = `${API_BASE_URL}/order/update/${bean.orderId}`;
-                    }}
-                >
-                    수정
-                </Button>
+                {/* 완료 버튼은 관리자만 볼 수 있습니다. */}
+                {user?.role === 'ADMIN' && (
+                    <Button
+                        variant="success"
+                        size="sm"
+                        className="me-2"
+                        onClick={() => changeStatus(`COMPLETED`)}
+                    >
+                        완료
+                    </Button>
+                )}
+
                 <Button
                     variant="danger"
                     size="sm"
                     className="me-2"
-                    onClick={() => deleteOrder(bean.orderId)}
+                    onClick={() => orderCancel()}
                 >
-                    삭제
+                    취소
                 </Button>
             </div>
         );

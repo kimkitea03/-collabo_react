@@ -21,18 +21,30 @@ function App({ user }) {
     const [quantity, setQuantity] = useState(0);
 
     useEffect(() => {
+        if (!user) {
+            alert('로그인이 필요한 서비스입니다.')
+            navigate('/member/login')
+            return;
+        }
+
         const url = `${API_BASE_URL}/product/detail/${id}`;
 
         axios
-            .get(url)
+            .get(url, { withCredentials: true }) // 쿠키, 세션 포함 옵션
             .then((response) => {
                 setProduct(response.data);
                 setLoading(false);// 상품 정보를 읽어 왔습니다.
             })
             .catch((error) => {
-                console.log(error);
-                alert('상품 정보를 불러 오는 중 오류가 발생했습니다.');
-                navigate(-1);
+                if (error.response && error.response.status === 401) {// 401(UnAuthrized)
+                    alert('로그인이 필요한 서비스입니다.');
+                    navigate('/member/login'); // 로그인 페이지로 리다이렉트
+                } else {
+                    alert('상품 정보를 불러 오는 중 오류가 발생했습니다.');
+                    navigate(-1); //이전 페이지로 이동하기
+                }
+
+
             });
     }, [id]);
 
@@ -85,7 +97,7 @@ function App({ user }) {
                 productId: product.id,
                 quantity: quantity
             };
-            const response = await axios.post(url, parameters)
+            const response = await axios.post(url, parameters, { withCredentials: true })
 
             alert(response.data);
             navigate('/product/list');
@@ -128,7 +140,7 @@ function App({ user }) {
             console.log("주문할 데이터 정보");
             console.log(parameters);
 
-            const response = await axios.post(url, parameters);
+            const response = await axios.post(url, parameters, { withCredentials: true });
             console.log(response.data);
             alert(`${product.name} ${quantity}개를 주문하였습니다.`)
 

@@ -28,7 +28,7 @@ function App({ user }) {
     const fetchCartProducts = async () => {
         try {
             const url = `${API_BASE_URL}/cart/list/${user.id}`;
-            const response = await axios.get(url);
+            const response = await axios.get(url, { withCredentials: true });
             console.log(`카트 상품 조회 결과`);
             console.log(response.data);
 
@@ -112,7 +112,7 @@ function App({ user }) {
 
             //patch 동작은 전체가 아닌 일부 데이터를 변경하고자 할 때 사용됩니다.
             // 스프링의 WebConfig 클래스안의 메소드를 참고하시길 바랍니다.
-            const response = await axios.patch(url);
+            const response = await axios.patch(url, {}, { withCredentials: true });
 
             console.log(response.data || '');
 

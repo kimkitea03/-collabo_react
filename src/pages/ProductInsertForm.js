@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button, Container, Form } from 'react-bootstrap';
 import { API_BASE_URL } from '../config/config';
 import { useNavigate } from 'react-router-dom';
@@ -31,9 +31,18 @@ SubmitAction 함수
     상품 목록 1페이지의 1번째에 이미지가 보여야 합니다.
 */
 
-function App() {
+function App({ user }) {
 
+    const navigate = useNavigate();
     const comment = '상품등록';
+
+    useEffect(() => {
+        if (!user || user.role !== 'ADMIN') {
+            alert(`${comment} 기능은 관리자만 접근이 가능합니다.`);
+            navigate('/');
+        }
+
+    }, [user, navigate]);
 
     const initial_value = {
         name: '', price: '', stock: '', image: '', description: ''
@@ -74,8 +83,6 @@ function App() {
             setProduct({ ...product, [name]: result });
         }
     };
-
-    const navigate = useNavigate();
 
     const SubmitAction = async (event) => {
         event.preventDefault();

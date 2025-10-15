@@ -54,7 +54,7 @@ SubmitAction 함수
     과거에 업로드 했던 이미지를 삭제하여야 합니다.
 */
 
-function App() {
+function App({ user }) {
     const { id } = useParams();
     console.log(`수정할 상품 번호 : ${id}`);
 
@@ -69,9 +69,13 @@ function App() {
 
     //id를 이용하여 기존에 입력한 상품 정보 가져오기
     useEffect(() => {
+        if (!user || user.role !== 'ADMIN') {
+            alert(`${comment} 기능은 관리자만 접근이 가능합니다.`);
+            navigate('/');
+        };
         const url = `${API_BASE_URL}/product/update/${id}`;
         axios
-            .get(url)
+            .get(url, { withCredentials: true })
             .then((response) => {
                 setProduct(response.data);
             })
@@ -80,7 +84,7 @@ function App() {
                 alert('해당 상품의 정보를 읽어오지 못 했습니다.');
             });
 
-    }, [id]);//id 값이 변경될 때 마다 화면을 re_rendering 시켜야 합니다.
+    }, [user]);//id 값이 변경될 때 마다 화면을 re_rendering 시켜야 합니다.
 
     // 폼 양식에서 어떠한 컨트롤의 값이 변경되었습니다.
     const ControlChange = (event) => {
@@ -142,7 +146,7 @@ function App() {
             const config = { headers: { 'Content-Type': 'application/json' } };
 
             //put() 메소드는 리소스를 "수정"하고자 할 때 사용하는 메소드입니다.
-            const response = await axios.put(url, parameters, config);
+            const response = await axios.post(url, parameters, config, { withCredentials: true });
 
             console.log(`상품 수정 : [${response.data}]`);
             alert('상품이 성공적으로 수정 되었습니다.');
@@ -172,7 +176,7 @@ function App() {
                         type="text"
                         placeholder="이름을(를) 입력해 주세요."
                         name="name"
-                        value={product.name}
+                        value={product.name || ''}
                         onChange={ControlChange}
                         required
                     />
@@ -184,7 +188,7 @@ function App() {
                         type="text"
                         placeholder="가격을(를) 입력해 주세요."
                         name="price"
-                        value={product.price}
+                        value={product.price || ''}
                         onChange={ControlChange}
                         required
                     />
@@ -195,7 +199,7 @@ function App() {
                     <Form.Label>카테고리</Form.Label>
                     <Form.Select
                         name="category"
-                        value={product.category}
+                        value={product.category || ''}
                         onChange={ControlChange}
                         required>
                         <option value="-">카테고리를 선택해 주세요</option>
@@ -211,7 +215,7 @@ function App() {
                         type="text"
                         placeholder="재고을(를) 입력해 주세요."
                         name="stock"
-                        value={product.stock}
+                        value={product.stock || ''}
                         onChange={ControlChange}
                         required
                     />
@@ -234,7 +238,7 @@ function App() {
                         type="text"
                         placeholder="상품 설명을(를) 입력해 주세요."
                         name="description"
-                        value={product.description}
+                        value={product.description || ''}
                         onChange={ControlChange}
                         required
                     />
